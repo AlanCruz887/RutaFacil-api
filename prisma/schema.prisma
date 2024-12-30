@@ -35,6 +35,8 @@ model routes {
   route_name     String? @db.VarChar(100)
   starting_point String? @db.VarChar(100)
   ending_point   String? @db.VarChar(100)
+  nombreInicio   String? @db.VarChar(255)
+  nombreFinal    String? @db.VarChar(255)
   stops          stops[]
 }
 
@@ -52,6 +54,8 @@ model stops {
   route_id       Int?
   stop_name      String?          @db.VarChar(100)
   sequence       Int?
+  latitude       String?          @db.VarChar(255)
+  longitude      String?          @db.VarChar(255)
   stop_schedules stop_schedules[]
   routes         routes?          @relation(fields: [route_id], references: [route_id], onDelete: Cascade, onUpdate: NoAction, map: "stops_ibfk_1")
 

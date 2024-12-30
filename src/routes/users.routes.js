@@ -6,6 +6,8 @@ import {
     updateUserController,
     deleteUser,
 } from "../controllers/users.controller.js";
+import { verifyToken } from "../config/jwt.js";
+import { authenticateJWT } from "../middlewares/authenticateJWT.js";
 
 const router = Router();
 
@@ -132,7 +134,7 @@ router.get("/get-users", getAllUsers);
  *                   type: string
  *                   example: "Error al obtener el usuario."
  */
-router.get("/get-user/:id", getOneUser);
+router.get("/get-user/", authenticateJWT ,getOneUser);
 
 /**
  * @swagger

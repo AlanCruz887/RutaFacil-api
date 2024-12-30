@@ -20,6 +20,8 @@ CREATE TABLE routes (
     route_id INT AUTO_INCREMENT PRIMARY KEY,
     route_name VARCHAR(100),
     starting_point VARCHAR(100),
+    nombreInicio VARCHAR(100),
+    nombreFinal VARCHAR(100),
     ending_point VARCHAR(100)
 );
 
@@ -28,6 +30,8 @@ CREATE TABLE stops (
     stop_id INT AUTO_INCREMENT PRIMARY KEY,
     route_id INT,
     stop_name VARCHAR(100),
+    latitude VARCHAR(200),
+    longitude VARCHAR(200),
     sequence INT,
     FOREIGN KEY (route_id) REFERENCES routes(route_id) ON DELETE CASCADE
 );

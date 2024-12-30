@@ -4,8 +4,9 @@ import {
     getOneRoute,
     addRoute,
     updateRouteController,
-    deleteRoute,
+    deleteRoute,getNearbyRoutes
 } from "../controllers/route.controller.js";
+import { getRouteDetailsById } from "../controllers/stopsPointsMap.controller.js";
 
 const router = Router();
 
@@ -129,7 +130,7 @@ router.get("/get-routes", getAllRoutes);
  *                   type: string
  *                   example: "Hubo un error al obtener la ruta."
  */
-router.get("/get-route/:id", getOneRoute);
+router.get("/get-route/:routeId", getRouteDetailsById);
 
 /**
  * @swagger
@@ -312,5 +313,7 @@ router.put("/update-route/:id", updateRouteController);
  *                   example: "Hubo un error al eliminar la ruta."
  */
 router.delete("/delete-route/:id", deleteRoute);
+
+router.post("/get-nearby-routes", getNearbyRoutes);
 
 export default router;

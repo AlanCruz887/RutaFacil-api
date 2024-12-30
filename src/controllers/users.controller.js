@@ -27,7 +27,8 @@ export const getAllUsers = async (req, res) => {
 // Obtener un usuario por ID
 export const getOneUser = async (req, res) => {
     try {
-        const user = await getUserById(parseInt(req.params.id));
+        console.log(req.user)
+        const user = await getUserById(parseInt(req.user.id));
 
         if (user == null) {
             return res.status(CODES_HTTP.NOT_FOUND).json({

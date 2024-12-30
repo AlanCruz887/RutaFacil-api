@@ -14,6 +14,7 @@ export async function getUserById(id) {
         where: {
             user_id: id,
         },
+        
     });
     await prisma.$disconnect();
     return user;
