@@ -19,6 +19,18 @@ export async function getVehicleLocationById(id) {
     return location;
 }
 
+
+// Obtener una ubicación de vehículo por IDVehiculo
+export async function getOneVehicleLocationByIdVehicle(id) {
+    const location = await prisma.vehicle_locations.findFirst({
+        where:{
+            vehicle_id:id
+        }
+    })
+    await prisma.$disconnect();
+    return location;
+}
+
 // Crear una nueva ubicación de vehículo
 export async function createVehicleLocation(data) {
     const newLocation = await prisma.vehicle_locations.create({
@@ -42,3 +54,38 @@ export async function deleteVehicleLocationById(id) {
     await prisma.$disconnect();
     return deletedLocation;
 }
+
+export async function updateVehicleLocationById(id, data) {
+    try {
+        // Encuentra el registro asociado al vehicle_id
+        const idVehicleLocation = await prisma.vehicle_locations.findFirst({
+            where: { vehicle_id: id },
+            select: { location_id: true },
+        });
+
+        // Manejo de caso donde no se encuentra el registro
+        if (!idVehicleLocation) {
+            throw new Error(`No se encontró una ubicación asociada al vehículo con ID ${id}`);
+        }
+
+        // Actualiza la ubicación
+        const updatedLocation = await prisma.vehicle_locations.update({
+            where: { location_id: idVehicleLocation.location_id },
+            data: {
+                vehicle_id: id,
+                lat: data.lat,
+                lon: data.lon,
+                event_type: data.event_type,
+                direction: data.direction,
+            },
+        });
+
+        return updatedLocation;
+    } catch (error) {
+        console.error('Error actualizando la ubicación del vehículo:', error);
+        throw error; // Re-lanza el error para que sea manejado por la capa superior
+    }
+}
+
+
+

@@ -8,6 +8,16 @@ export async function getVehicles() {
     return vehicles;
 }
 
+export async function getVehiclesByRouteIdDAO(id) {
+    const vehicles = await prisma.vehicles.findMany({
+        where: {
+            id_route: id,
+        }
+    });
+    await prisma.$disconnect();
+    return vehicles;
+}
+
 // Obtener un vehículo por ID
 export async function getVehicleById(id) {
     const vehicle = await prisma.vehicles.findUnique({

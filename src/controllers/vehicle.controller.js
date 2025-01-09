@@ -5,6 +5,7 @@ import {
     createVehicle,
     updateVehicle,
     deleteVehicleById,
+    getVehiclesByRouteIdDAO,
 } from "../DAO/vehicle.DAO.js";
 
 // Obtener todos los vehículos
@@ -23,6 +24,24 @@ export const getAllVehicles = async (req, res) => {
         });
     }
 };
+
+export const getVehiclesByRouteId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const vehicles = await getVehiclesByRouteIdDAO(parseInt(id));
+        res.status(CODES_HTTP.OK).json({
+            success: true,
+            message: "Vehículos obtenidos con éxito:",
+            data: vehicles,
+        });
+    } catch (error) {
+        console.log(error)
+        return res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Hubo un error al obtener los vehículos.",
+        });
+    }
+}
 
 // Obtener un vehículo por ID
 export const getOneVehicle = async (req, res) => {

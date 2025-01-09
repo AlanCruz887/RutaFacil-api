@@ -5,6 +5,7 @@ import {
     addVehicle,
     updateVehicleController,
     deleteVehicle,
+    getVehiclesByRouteId,
 } from "../controllers/vehicle.controller.js";
 
 const router = express.Router();
@@ -129,6 +130,9 @@ router.get("/get-vehicles", getAllVehicles);
  *                   example: "Error al obtener el vehículo."
  */
 router.get("/get-vehicle/:id", getOneVehicle);
+
+
+router.get("/get-vehicles-by-route/:id", getVehiclesByRouteId);
 
 /**
  * @swagger

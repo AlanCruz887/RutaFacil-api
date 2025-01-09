@@ -4,6 +4,7 @@ import {
     getOneVehicleLocation,
     addVehicleLocation,
     deleteVehicleLocation,
+    updateVehicleLocation,getVehicleLocationByIdVehicle
 } from "../controllers/vehicle_locations.controller.js";
 
 const router = Router();
@@ -137,6 +138,8 @@ router.get("/get-vehicle-locations", getAllVehicleLocations);
  */
 router.get("/get-vehicle-location/:id", getOneVehicleLocation);
 
+router.get("/get-vehicle-location-by-vehicle-id/:id", getVehicleLocationByIdVehicle);
+
 /**
  * @swagger
  * /api/vehicle-locations/create-vehicle-location:
@@ -253,5 +256,8 @@ router.post("/create-vehicle-location", addVehicleLocation);
  *                   example: "Error al eliminar la ubicación del vehículo."
  */
 router.delete("/delete-vehicle-location/:id", deleteVehicleLocation);
+
+
+router.put("/update-vehicle-location/:id", updateVehicleLocation);
 
 export default router;

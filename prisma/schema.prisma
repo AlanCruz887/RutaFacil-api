@@ -31,13 +31,14 @@ model ratings {
 }
 
 model routes {
-  route_id       Int     @id @default(autoincrement())
-  route_name     String? @db.VarChar(100)
-  starting_point String? @db.VarChar(100)
-  ending_point   String? @db.VarChar(100)
-  nombreInicio   String? @db.VarChar(255)
-  nombreFinal    String? @db.VarChar(255)
+  route_id       Int        @id @default(autoincrement())
+  route_name     String?    @db.VarChar(100)
+  starting_point String?    @db.VarChar(100)
+  ending_point   String?    @db.VarChar(100)
+  nombreInicio   String?    @db.VarChar(255)
+  nombreFinal    String?    @db.VarChar(255)
   stops          stops[]
+  vehicles       vehicles[]
 }
 
 model stop_schedules {
@@ -91,9 +92,13 @@ model vehicles {
   plate_number      String?             @db.VarChar(20)
   model             String?             @db.VarChar(50)
   capacity          Int?
+  id_route          Int
   notifications     notifications[]
   ratings           ratings[]
   vehicle_locations vehicle_locations[]
+  routes            routes              @relation(fields: [id_route], references: [route_id], onDelete: NoAction, onUpdate: NoAction, map: "vehicles_ibfk_1")
+
+  @@index([id_route], map: "id_route")
 }
 
 enum users_role {

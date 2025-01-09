@@ -13,6 +13,8 @@ CREATE TABLE vehicles (
     plate_number VARCHAR(20),
     model VARCHAR(50),
     capacity INT
+    route_id INT, -- Relacionar vehículos con rutas
+    FOREIGN KEY (route_id) REFERENCES routes(route_id) ON DELETE SET NULL
 );
 
 -- Tabla de Rutas
@@ -55,6 +57,7 @@ CREATE TABLE vehicle_locations (
     direction ENUM('outbound', 'inbound'), -- outbound: desde la base de salida a la de llegada
                                            -- inbound: desde la base de llegada a la de salida
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id) ON DELETE CASCADE
+
 );
 
 -- Tabla de Notificaciones

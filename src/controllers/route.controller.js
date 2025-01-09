@@ -132,7 +132,7 @@ export const getNearbyRoutes = async (req, res) => {
     const routeIds = [...new Set(nearbyStops.map((stop) => stop.route_id))];
 
     if (routeIds.length === 0) {
-      return res.status(200).json({
+      return res.status(204).json({
         success: true,
         message: 'No se encontraron rutas cercanas.',
         data: [],

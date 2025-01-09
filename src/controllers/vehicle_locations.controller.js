@@ -4,6 +4,8 @@ import {
     getVehicleLocationById,
     createVehicleLocation,
     deleteVehicleLocationById,
+    updateVehicleLocationById,
+    getOneVehicleLocationByIdVehicle
 } from "../DAO/vehicle_locations.DAO.js";
 
 // Obtener todas las ubicaciones de vehículos
@@ -48,6 +50,32 @@ export const getOneVehicleLocation = async (req, res) => {
     }
 };
 
+
+export const getVehicleLocationByIdVehicle = async (req, res) => {
+    try {
+        const location = await getOneVehicleLocationByIdVehicle(parseInt(req.params.id));
+        if (location == null) {
+            return res.status(CODES_HTTP.NO_FOUND).json({
+                success: false,
+                message: "Ubicación de vehículo no encontrada",
+            });
+        }
+
+        res.status(CODES_HTTP.OK).json({
+            success: true,
+            message: "Petición exitosa:",
+            data: location,
+        });
+    } catch (error) {
+        console.log(error)
+        return res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Error al obtener la ubicación del vehículo.",
+        });
+    }
+}
+
+
 // Crear una nueva ubicación de vehículo
 export const addVehicleLocation = async (req, res) => {
     try {
@@ -81,3 +109,20 @@ export const deleteVehicleLocation = async (req, res) => {
         });
     }
 };
+
+export const updateVehicleLocation = async (req, res) => {
+    try {
+        const updatedLocation = await updateVehicleLocationById(parseInt(req.params.id), req.body);
+        res.status(CODES_HTTP.OK).json({
+            success: true,
+            message: "Ubicación de vehículo actualizada con éxito:",
+            data: updatedLocation,
+        });
+    } catch (error) {
+        console.log(error)
+        return res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Error al actualizar la ubicación del vehículo.",
+        });
+    }
+}
