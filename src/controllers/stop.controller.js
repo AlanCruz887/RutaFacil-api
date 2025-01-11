@@ -17,6 +17,7 @@ export const getAllStops = async (req, res) => {
             data: stops,
         });
     } catch (error) {
+        console.log(error);
         return res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Error al obtener las paradas.",
@@ -59,6 +60,7 @@ export const addStop = async (req, res) => {
             data: newStop,
         });
     } catch (error) {
+        console.log(error)
         return res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: "Error al crear la parada.",

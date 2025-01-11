@@ -62,12 +62,18 @@ CREATE TABLE vehicle_locations (
 
 -- Tabla de Notificaciones
 CREATE TABLE notifications (
-    notification_id INT AUTO_INCREMENT PRIMARY KEY,
-    vehicle_id INT,
-    message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id) ON DELETE CASCADE
+    notification_id INT AUTO_INCREMENT PRIMARY KEY, 
+    vehicle_id INT,                                
+    user_id INT,                                     
+    status_active ENUM('no','yes') DEFAULT 'yes', 
+    push_token VARCHAR(255),                        
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(vehicle_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE (user_id, vehicle_id) -- Restricción única para la combinación de user_id y vehicle_id
 );
+
+
 
 -- Tabla de Calificaciones
 CREATE TABLE ratings (
@@ -91,6 +97,8 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+
 
 -- Reactivar las claves foráneas
 SET FOREIGN_KEY_CHECKS = 1;

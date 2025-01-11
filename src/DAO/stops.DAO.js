@@ -5,12 +5,32 @@ const prisma = new PrismaClient();
 export async function getStops() {
     const stops = await prisma.stops.findMany({
         include: {
-            route: false, // Incluir la relación con la tabla de rutas
-        }
+            routes: true, // Incluye la relación con las rutas
+        },
     });
+
+    // Agrupar las paradas por las rutas
+    const groupedStops = stops.reduce((acc, stop) => {
+        const routeId = stop.routes.route_id; // Asegúrate de usar el campo correcto para la relación
+        if (!acc[routeId]) {
+            acc[routeId] = {
+                route: stop.routes, // Detalles de la ruta
+                stops: [],          // Inicializa las paradas
+            };
+        }
+
+        // Copia la parada pero elimina la relación con `routes` para evitar duplicados
+        const { routes, ...stopWithoutRoute } = stop;
+        acc[routeId].stops.push(stopWithoutRoute); // Agregar la parada sin duplicar la ruta
+        return acc;
+    }, {});
+
     await prisma.$disconnect();
-    return stops;
+
+    return Object.values(groupedStops); // Devuelve el resultado como un array
 }
+
+
 
 // Obtener una parada por ID
 export async function getStopById(id) {
@@ -32,6 +52,8 @@ export async function createStop(data) {
         data: {
             route_id: data.route_id,
             stop_name: data.stop_name,
+            latitude: data.latitude,
+            longitude: data.longitude,
             sequence: data.sequence,
         },
     });

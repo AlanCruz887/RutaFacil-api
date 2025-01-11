@@ -3,7 +3,13 @@ const prisma = new PrismaClient();
 
 // Obtener todos los vehículos
 export async function getVehicles() {
-    const vehicles = await prisma.vehicles.findMany();
+    const vehicles = await prisma.vehicles.findMany(
+        {
+            include: {
+                routes: true,
+            }
+        }
+    );
     await prisma.$disconnect();
     return vehicles;
 }
@@ -36,6 +42,7 @@ export async function createVehicle(data) {
             plate_number: data.plate_number,
             model: data.model,
             capacity: data.capacity,
+            id_route: data.id_route,
         },
     });
     await prisma.$disconnect();

@@ -54,38 +54,46 @@ export async function deleteVehicleLocationById(id) {
     await prisma.$disconnect();
     return deletedLocation;
 }
-
 export async function updateVehicleLocationById(id, data) {
     try {
-        // Encuentra el registro asociado al vehicle_id
-        const idVehicleLocation = await prisma.vehicle_locations.findFirst({
+        // Buscar si existe un registro para el vehicle_id
+        const existingLocation = await prisma.vehicle_locations.findFirst({
             where: { vehicle_id: id },
-            select: { location_id: true },
         });
 
-        // Manejo de caso donde no se encuentra el registro
-        if (!idVehicleLocation) {
-            throw new Error(`No se encontró una ubicación asociada al vehículo con ID ${id}`);
+        let result;
+
+        if (existingLocation) {
+            // Actualiza el registro existente
+            result = await prisma.vehicle_locations.update({
+                where: { location_id: existingLocation.location_id }, // Usar la clave única existente
+                data: {
+                    lat: data.lat,
+                    lon: data.lon,
+                    event_type: data.event_type,
+                    direction: data.direction,
+                },
+            });
+        } else {
+            // Crea un nuevo registro
+            result = await prisma.vehicle_locations.create({
+                data: {
+                    vehicle_id: id,
+                    lat: data.lat,
+                    lon: data.lon,
+                    event_type: data.event_type,
+                    direction: data.direction,
+                },
+            });
         }
 
-        // Actualiza la ubicación
-        const updatedLocation = await prisma.vehicle_locations.update({
-            where: { location_id: idVehicleLocation.location_id },
-            data: {
-                vehicle_id: id,
-                lat: data.lat,
-                lon: data.lon,
-                event_type: data.event_type,
-                direction: data.direction,
-            },
-        });
-
-        return updatedLocation;
+        return result;
     } catch (error) {
-        console.error('Error actualizando la ubicación del vehículo:', error);
-        throw error; // Re-lanza el error para que sea manejado por la capa superior
+        console.error('Error actualizando o creando la ubicación del vehículo:', error);
+        throw error;
     }
 }
+
 
 
 

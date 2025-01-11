@@ -9,9 +9,11 @@ import notificationRoutes from './routes/notification.routes.js';
 import vehicleLocationsRoutes from './routes/vehicle_locations.routes.js';
 import userRoutes from './routes/users.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import cors from 'cors'; // Importa CORS
 
 
 const app = express();
+app.use(cors()); // Permite solicitudes desde cualquier origen
 
 app.use(express.json());
 app.use(morgan('dev'));

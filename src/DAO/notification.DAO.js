@@ -1,56 +1,59 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// Obtener todas las notificaciones
-export async function getNotifications() {
-    const notifications = await prisma.notifications.findMany();
-    await prisma.$disconnect();
-    return notifications;
-}
-
-// Obtener una notificación por ID
-export async function getNotificationById(id) {
-    const notification = await prisma.notifications.findUnique({
-        where: {
-            notification_id: id,
-        }
+// Obtener tokens de notificaciones (sin cambios)
+export const getNotificationsToken = async () => {
+    const notification = await prisma.notifications.findMany({
+        select: {
+            user_id: true, // Asegúrate de incluir `true` para seleccionar campos
+        },
     });
-    await prisma.$disconnect();
+    return notification;
+};
+
+export const getNotificationsByVehicleIDDAO = async (vehicle_id) => {
+    const notification = await prisma.notifications.findMany({
+        where: {
+            vehicle_id: vehicle_id,
+            status_active: "yes"
+        },
+    });
     return notification;
 }
 
 // Crear una nueva notificación
-export async function createNotification(data) {
-    const newNotification = await prisma.notifications.create({
+export const createNotificationDAO = async (data, user_id) => {
+    const notificationCreated = await prisma.notifications.create({
         data: {
-            user_id: data.user_id,
-            message: data.message,
-            status: data.status,
+            user_id: user_id,
+            vehicle_id: data.vehicle_id,
+            push_token: data.push_token,
         },
     });
-    await prisma.$disconnect();
-    return newNotification;
-}
+    return notificationCreated;
+};
 
-// Actualizar una notificación existente
-export async function updateNotification(id, data) {
-    const updatedNotification = await prisma.notifications.update({
-        where: { notification_id: id },
-        data: {
-            user_id: data.user_id,
-            message: data.message,
-            status: data.status,
+// Verificar si ya existe una notificación para este usuario y vehículo
+export const checkNotificationExistsDAO = async (user_id, vehicle_id) => {
+    const notification = await prisma.notifications.findFirst({
+        where: {
+            user_id: user_id,
+            vehicle_id: vehicle_id,
         },
     });
-    await prisma.$disconnect();
+    return notification !== null; // Retorna `true` si existe, `false` si no
+};
+
+// Actualizar el estado de una notificación
+export const updateNotificationStatusDAO = async (user_id, vehicle_id, notification_active) => {
+    const updatedNotification = await prisma.notifications.updateMany({
+        where: {
+            user_id: user_id,
+            vehicle_id: vehicle_id,
+        },
+        data: {
+            status_active: notification_active,
+        },
+    });
     return updatedNotification;
-}
-
-// Eliminar una notificación por ID
-export async function deleteNotificationById(id) {
-    const deletedNotification = await prisma.notifications.delete({
-        where: { notification_id: id },
-    });
-    await prisma.$disconnect();
-    return deletedNotification;
-}
+};
