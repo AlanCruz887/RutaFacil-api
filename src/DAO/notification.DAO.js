@@ -3,11 +3,7 @@ const prisma = new PrismaClient();
 
 // Obtener tokens de notificaciones (sin cambios)
 export const getNotificationsToken = async () => {
-    const notification = await prisma.notifications.findMany({
-        select: {
-            user_id: true, // Asegúrate de incluir `true` para seleccionar campos
-        },
-    });
+    const notification = await prisma.notifications.findMany();
     return notification;
 };
 
