@@ -138,6 +138,8 @@ export const sendPushNotifications = async (req, res) => {
       message: `Notificaciones enviadas con éxito a ${successfulResponses} destinatarios.`,
     });
   } catch (error) {
+    console.log("hgola")
+
     console.error("Error al enviar notificaciones:", error);
     res.status(CODES_HTTP.INTERNAL_SERVER_ERROR).json({
       success: false,

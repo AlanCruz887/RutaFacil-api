@@ -17,7 +17,7 @@ export async function getVehicles() {
 export async function getVehiclesByRouteIdDAO(id) {
     const vehicles = await prisma.vehicles.findMany({
         where: {
-            id_route: id,
+            route_id: id,
         }
     });
     await prisma.$disconnect();
@@ -42,9 +42,9 @@ export async function createVehicle(data) {
             plate_number: data.plate_number,
             model: data.model,
             capacity: data.capacity,
-            id_route: data.id_route,
-        },
-    });
+            route_id: data.id_route
+        }
+    })
     await prisma.$disconnect();
     return newVehicle;
 }
